@@ -5,8 +5,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
+
 func init() {
-	fmt.Println("主MySql节点上线");
+	fmt.Println("gin与http学习，main文件")
 }
 
 //不大写，不public
@@ -14,39 +15,35 @@ type Login struct {
 	User     string `form:"user" json:"user" xml:"user" binding:"required" `
 	Password string `form:"password" json:"password" xml:"password" binding:"required" `
 	Targetdb string `form:"targetdb" json:"targetdb" xml:"targetdb" binding:"required"`
-	Dhash string `form:"Dhash" json:"Dhash" xml:"Dhash" binding:"required"`
-	Status string `form:"status" json:"status" xml:"status" binding:"required"`
-	Ip string `form:"ip" json:"ip" xml:"ip" binding:"required"`
+	Dhash    string `form:"Dhash" json:"Dhash" xml:"Dhash" binding:"required"`
+	Status   string `form:"status" json:"status" xml:"status" binding:"required"`
+	Ip       string `form:"ip" json:"ip" xml:"ip" binding:"required"`
 	Capacity string `form:"capacity" json:"capacity" xml:"capacity" binding:"required"`
-	Remain string `form:"remain" json:"remain" xml:"remain" binding:"required"`
-
+	Remain   string `form:"remain" json:"remain" xml:"remain" binding:"required"`
 }
-
 
 func test1(c *gin.Context) {
 
 	var json4 Login
 	if err := c.ShouldBindJSON(&json4); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err })
+		c.JSON(http.StatusBadRequest, gin.H{"error": err})
 		return
 	}
-	ClientIP:= c.ClientIP()
+	ClientIP := c.ClientIP()
 
-	c.JSON(http.StatusOK,gin.H{
-		"code":200,
-		"targetdb" : json4.Targetdb,
-		"Dhash" : json4.Dhash,
-		"status" : json4.Status,
-		"ip" : json4.Ip,
-		"ClientIP" : ClientIP,
-		"capacity" : json4.Capacity,
-		"remain" : json4.Remain,
-		"success":true,
+	c.JSON(http.StatusOK, gin.H{
+		"code":     200,
+		"targetdb": json4.Targetdb,
+		"Dhash":    json4.Dhash,
+		"status":   json4.Status,
+		"ip":       json4.Ip,
+		"ClientIP": ClientIP,
+		"capacity": json4.Capacity,
+		"remain":   json4.Remain,
+		"success":  true,
 	})
 
-
 }
-
 
 func main() {
 	router := gin.Default()
@@ -67,10 +64,9 @@ func main() {
 		message := name + " is " + action
 		c.String(http.StatusOK, message)
 	})
-	router.POST("/do/test1",test1)
+
+	router.POST("/do/test1", test1)
 
 	router.Run(":8080")
 
-
 }
-
