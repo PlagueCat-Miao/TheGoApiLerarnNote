@@ -75,6 +75,30 @@
       router.POST("login", LoginCheck)
      ```
     -[gin框架相关参考](https://www.cnblogs.com/-beyond/p/9391892.html)
+#### GET/POST
+- GO
+   ``` go GET 流程
+        req, err := http.NewRequest("GET", url, nil)
+        client := &http.Client{}
+        resp, err := client.Do(req)
+        defer resp.Body.Close()
+   ``` 
+   ``` go POST-json 流程
+        ...
+        //requestBody内容为json
+        req, err := http.NewRequest("POST", url, requestBody)
+        resp, err := client.Do(req)
+  
+        //反序列化
+        var ans Answer
+        json.Unmarshal([]byte(string(resp)), &ans)
+   ```
+- curl
+  -  POST 为例子
+    ``` liunx                                                                               
+            curl -X POST http://localhost:8080/loginJSON -H 'content-type:application/json' -d '{"user":"manu","password":"123"}'
+    ```
+
 ### makefile
 #### makefile中使用 shell
  - 正常指令直接输入如：`go build`
@@ -92,3 +116,12 @@
 
 
 ##雷区
+### 修改对象时，需要使用指针
+ - `func (a *Ans)xxxx {` 
+     - 传递了指针后，函数内内容可不比追究是否使用指针格式（不区分`a = a+b`or `*a =*a + *b`)
+     - 不使用指针，如：`func (a Ans)xxxx {` 传递的是副本，即使使用地址`&a` 也不会影响函数外的struct（即调用该函数的对象） 
+ ## 新建类
+  - `var ans Answer`  对象
+  - `ans = new(Answer)`  对象
+  - `var ansP *Answer` 指针 、但是当同名用（不用`*a`） 没指时用 就Panic
+  - `requestBody := new(bytes.Buffer)` bytes.Buffer里面是切片
