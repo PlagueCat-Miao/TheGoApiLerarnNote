@@ -122,11 +122,14 @@
      - 不使用指针，如：`func (a Ans)xxxx {` 传递的是副本，即使使用地址`&a` 也不会影响函数外的struct（即调用该函数的对象） 
 ### 2.新建类
   - `var ans Answer`  对象
-  - `ans = new(Answer)`  对象
+  - `ansP := new(Answer)`  指针，有对象
   - `var ansP *Answer` 指针 
-    - `ansP = ans`当同名用（不用`*a`） 没指时用 就Panic
+    - `ansP.name ` 指针调用成员时不用解指针（`*a`） 没指时用 就Panic
     - `ansP = &ans`当指针用  没指时用 就Panic
-  - `requestBody := new(bytes.Buffer)` bytes.Buffer里面是切片
+  - `requestBody := new(bytes.Buffer)` bytes.Buffer里面是切片，切片都是指针
+  - `func input(a Answer)`  a是副本，出函数 a不会变化
+  - `func input(a *Answer)`  &a是地址指针，出函数后 a会变化
+  - `func(ctx context.Context)` 首先ctx 是副本，但是通道名相同，是公用的，变化会所有人都有反应（指竞争关系）
 ### 3.xxxx_test.go 
   - 整个文件是不能和此包一起被import的
   - go test -v xxxx_test.go 查看详情
@@ -163,23 +166,6 @@
        - 所以 ！只应该出现在 pkg 下，作为自动命名，src下请正常命名
     
     
-    - 生成时避免路径大写、包括GitHub用户命名、项目命名
-    - 1. 在文件系统路经，将`！`去掉，2. 在import使用$GOPATH下相对路径检索本地文件时，不影响使用
-       - 相当于走本地src
-    - 1. go get 时将 大写全部替换为小写，仍然可以使用（2. 此时import 应全部替换为小写）
-       - 相当于走github库(pkg/mod)
-       - 可能会警告` module declares its path as: github.com/!plague!cat-!miao/GOIPFS
-             	        but was required as: github.com/plaguecat-miao/goipfs`
-       - go run 时也会警告，原因：当检索到小写路径（于pkg中的那个，文件命名带版本号）时，其go.mod中 module 可能是原大写(不符合import的小写)，需要手动更改
-          - 改pkg的文件路径（不推荐）
-          - 改go.mod 的 module为小写
-       - 检索顺序是先自己go.mod 、src 后 pkg 意味着
-         - 如果你项目自己名字就是大写（现在变成！）；而import想引用自己，又想写小写
-           - = 改自己的go.mod的module 为小写
-           - = 改自己src下的文件系统路径为小写~~~~
-         - 如果go.mod、src 先出现了大小写非敏感的同名，检索就会终止。此时如果包
-         -
-    - 本项目的 go mod 时和本地文件情况关联 主要注意module路径是否与文件系统路径相符合 
 ### 5. go env -w GO111MODULE=off 代理
   - 没办法代理会阻止你使用本地路径寻找包（哪怕就在自己目录下）
     - 报错：` cannot find module for path xxxxxxxx`

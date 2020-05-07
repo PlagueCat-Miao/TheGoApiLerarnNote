@@ -36,15 +36,15 @@ func main() {
 
 
 
-	_, cancel := context.WithCancel(context.Background())
+	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	/*go func(ctx *context.Context){
+	go func(ctx context.Context){
 
 
 	}(ctx)
-*/
-	var n Name;
+
+	var n  Name;
 	n1 := new(Name)
 	var n2,n3 *Name
 	n2=&n;
@@ -53,8 +53,18 @@ func main() {
     n3.name="cat"
 
 	fmt.Println("n",n,"n1:",n1)
+	var fn,fn2  Name;
+	input(fn)
+	inputP(&fn2)
+	fmt.Println("n",fn.name,"n1:",fn2.name)
 
 	//router.Run(":8080")
 
 
+}
+func input(a Name){
+	a.name= "k"
+}
+func inputP(a* Name){
+	a.name= "kP"
 }
