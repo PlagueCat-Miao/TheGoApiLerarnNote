@@ -41,6 +41,7 @@ github.com/modern-go/reflect2 v0.0.0-20180701023420-4b7aa43c6742/go.mod h1:bx2lN
 github.com/modern-go/reflect2 v1.0.1 h1:9f412s+6RmYXLWZSEzVVgPGK7C2PphHj5RJrvfx9AWI=
 github.com/modern-go/reflect2 v1.0.1/go.mod h1:bx2lNnkwVCuqBIxFjflWJWanXIb3RllmbCylyMrvgv0=
 github.com/plaguecat-miao/TheGoApiLerarnNote v0.0.0-20200506081839-b2c0bc714bac h1:V4UN7RPqMQ9eX2/Q4fyGJx4M4PAG0I53YADTf3V2aVE=
+github.com/plaguecat-miao/thegoapilerarnnote v0.0.0-20200507013413-c4e491f0151f h1:bPmHIz9/kyWiC0Lnmvzfj6dld0M7iMzq92NOCfEQnbc=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=

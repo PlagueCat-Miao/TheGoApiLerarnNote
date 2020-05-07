@@ -2,12 +2,12 @@
 主要学习 gin框架与 net/http
 ## 下载
 ``` 
-    cd $GOPATH/src/github.com/plaguecat-miao/TheGoApiLerarnNote;git pull origin master;git diff  
+    cd $GOPATH/src/github.com/PlagueCat-Miao/TheGoApiLerarnNote;git pull origin master;git diff  
 
 ```
 ## 上载
 ```
-    cd $GOPATH/src/github.com/plaguecat-miao/TheGoApiLerarnNote;git add . ;git commit -m "快速上传"; git push origin master 
+    cd $GOPATH/src/github.com/PlagueCat-Miao/TheGoApiLerarnNote;git add . ;git commit -m "快速上传"; git push origin master 
 
 ```
 ## 墓碑
@@ -131,10 +131,55 @@
   - 整个文件是不能和此包一起被import的
   - go test -v xxxx_test.go 查看详情
   - 对于循环有限时（我运行了600s，test自动FAIL退出）
-### 4. go get
+### 4. go get /mod 大小写 （代理：On）
   - 注意大小写 go get xxx 遇到大写时会替换成！小写 （如：`PLagueCat-Miao => !plague!cat-!miao`）但是import 和 build 路径时又不支持`!`
-    - 避免路径大写、包括GitHub用户命名、项目命名
-    - 可是把路径中的大写全部替换为小写，不影响使用
+    - 不要改 pkg文件夹下的文件如：go.mod 它和go.sum 他们有关联 单改没有用
+    - import 当然支持大写 如：`github.com/PlagueCat-Miao/TheGoApiLerarnNote`
+       - 虽然被保存成 `github.com/!plague!cat-!miao/!the!go!api!lerarn!note`
+       - 但是内部(见go.mod）仍正常大写，可见go.mod才是正确的检索依据
+       - 当你在因个新项目创建go.mod `go mod init`时，注意看module
+          - 她根是据此时的$GOPATN路径自动分析处本包名字
+          - 她区分`github.com/!plague!cat-!miao/!the!go!api!lerarn!note`
+          - 她区分`github.com/plaguecat-miao/thegoapilerarnnote`
+          - 她区分`github.com/PlagueCat-Miao/TheGoApiLerarnNote`
+          - 以上三个都是严格区分的
+       - 所以你要**使用大写**的话，
+          - 新项目：请在将src文件系统路径统一大写后(并去掉!)，再次`go init`
+          - pkg包：不用管pkg下文件系统路径，import该大写就大写
+    - 当你go get      
+        - `github.com/PlagueCat-Miao/TheGoApiLerarnNote`
+           - 可以get，得到文件系统 `github.com/!plague!cat-!miao/!the!go!api!lerarn!note`
+        - `github.com/plaguecat-miao/TheGoApiLerarnNote`
+           - 可以get，得到文件系统 `github.com/plaguecat-miao/!the!go!api!lerarn!note`
+        - `github.com/plaguecat-miao/thegoapilerarnnote`         
+           - 可以get，得到文件系统 `github.com/plaguecat-miao/thegoapilerarnnote`
+        - import
+            1. 大写对应文件系统路径为 pkg/mod/!xxxx(替换成！+小写)
+            2. go.mod 
+              - 如果项目有，内容是原版，且 import 与 go.mod 的module 必须一致(要是的module大写你还小写import 就炸)
+              - 如果没有go.mod  满足上文的路径就可以（不过pkg 都是go get 自动下和命名文件路径 ，所以小写大写无所谓）
+       - 你不想走 pkg 相当于走github库(pkg/mod)
+           -  GO111MODULE=off 切换为本地模式 （然后你就被祖国的墙把go get墙住
+       - 所以 ！只应该出现在 pkg 下，作为自动命名，src下请正常命名
+    
+    
+    - 生成时避免路径大写、包括GitHub用户命名、项目命名
+    - 1. 在文件系统路经，将`！`去掉，2. 在import使用$GOPATH下相对路径检索本地文件时，不影响使用
+       - 相当于走本地src
+    - 1. go get 时将 大写全部替换为小写，仍然可以使用（2. 此时import 应全部替换为小写）
+       - 相当于走github库(pkg/mod)
+       - 可能会警告` module declares its path as: github.com/!plague!cat-!miao/GOIPFS
+             	        but was required as: github.com/plaguecat-miao/goipfs`
+       - go run 时也会警告，原因：当检索到小写路径（于pkg中的那个，文件命名带版本号）时，其go.mod中 module 可能是原大写(不符合import的小写)，需要手动更改
+          - 改pkg的文件路径（不推荐）
+          - 改go.mod 的 module为小写
+       - 检索顺序是先自己go.mod 、src 后 pkg 意味着
+         - 如果你项目自己名字就是大写（现在变成！）；而import想引用自己，又想写小写
+           - = 改自己的go.mod的module 为小写
+           - = 改自己src下的文件系统路径为小写~~~~
+         - 如果go.mod、src 先出现了大小写非敏感的同名，检索就会终止。此时如果包
+         -
+    - 本项目的 go mod 时和本地文件情况关联 主要注意module路径是否与文件系统路径相符合 
 ### 5. go env -w GO111MODULE=off 代理
   - 没办法代理会阻止你使用本地路径寻找包（哪怕就在自己目录下）
     - 报错：` cannot find module for path xxxxxxxx`

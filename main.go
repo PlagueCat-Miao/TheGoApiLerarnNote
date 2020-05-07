@@ -4,8 +4,10 @@ import (
 	"context"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/PlagueCat-Miao/TheGoApiLerarnNote/GINtest"
+
 	"net/http"
-	"github.com/plaguecat-miao/TheGoApiLerarnNote/GINtes"
+
 )
 
 type  Name struct {
@@ -50,7 +52,7 @@ func main() {
     n2.name="hell"
     n3.name="cat"
 
-	fmt.Println(n,n1)
+	fmt.Println("n",n,"n1:",n1)
 
 	//router.Run(":8080")
 
