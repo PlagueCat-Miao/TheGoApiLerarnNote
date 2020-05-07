@@ -1,4 +1,4 @@
-module github.com/!plague!cat-!miao/TheGoApiLerarnNote
+module github.com/plaguecat-miao/TheGoApiLerarnNote
 
 go 1.13
 

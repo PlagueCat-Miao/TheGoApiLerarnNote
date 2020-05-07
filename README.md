@@ -2,12 +2,12 @@
 主要学习 gin框架与 net/http
 ## 下载
 ``` 
-    cd $GOPATH/src/github.com/\!plague\!cat-\!miao/TheGoApiLerarnNote;git pull origin master;git diff  
+    cd $GOPATH/src/github.com/plaguecat-miao/TheGoApiLerarnNote;git pull origin master;git diff  
 
 ```
 ## 上载
 ```
-    cd $GOPATH/src/github.com/\!plague\!cat-\!miao/TheGoApiLerarnNote;git add . ;git commit -m "快速上传"; git push origin master 
+    cd $GOPATH/src/github.com/plaguecat-miao/TheGoApiLerarnNote;git add . ;git commit -m "快速上传"; git push origin master 
 
 ```
 ## 墓碑
@@ -116,12 +116,26 @@
 
 
 ## 雷区
-### 修改对象时，需要使用指针
+### 1.修改对象时，需要使用指针
  - `func (a *Ans)xxxx {` 
      - 传递了指针后，函数内内容可不比追究是否使用指针格式（不区分`a = a+b`or `*a =*a + *b`)
      - 不使用指针，如：`func (a Ans)xxxx {` 传递的是副本，即使使用地址`&a` 也不会影响函数外的struct（即调用该函数的对象） 
- ## 新建类
+### 2.新建类
   - `var ans Answer`  对象
   - `ans = new(Answer)`  对象
-  - `var ansP *Answer` 指针 、但是当同名用（不用`*a`） 没指时用 就Panic
+  - `var ansP *Answer` 指针 
+    - `ansP = ans`当同名用（不用`*a`） 没指时用 就Panic
+    - `ansP = &ans`当指针用  没指时用 就Panic
   - `requestBody := new(bytes.Buffer)` bytes.Buffer里面是切片
+### 3.xxxx_test.go 
+  - 整个文件是不能和此包一起被import的
+  - go test -v xxxx_test.go 查看详情
+  - 对于循环有限时（我运行了600s，test自动FAIL退出）
+### 4. go get
+  - 注意大小写 go get xxx 遇到大写时会替换成！小写 （如：`PLagueCat-Miao => !plague!cat-!miao`）但是import 和 build 路径时又不支持`!`
+    - 避免路径大写、包括GitHub用户命名、项目命名
+    - 可是把路径中的大写全部替换为小写，不影响使用
+### 5. go env -w GO111MODULE=off 代理
+  - 没办法代理会阻止你使用本地路径寻找包（哪怕就在自己目录下）
+    - 报错：` cannot find module for path xxxxxxxx`
+    - 请使用github 上传后 在下载的方式
