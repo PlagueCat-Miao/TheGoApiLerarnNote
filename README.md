@@ -129,7 +129,7 @@
   - `requestBody := new(bytes.Buffer)` bytes.Buffer里面是切片，切片都是指针
   - `func input(a Answer)`  a是副本，出函数 a不会变化
   - `func input(a *Answer)`  &a是地址指针，出函数后 a会变化
-  - `func(ctx context.Context)` 首先ctx 是副本，但是通道名相同，是公用的，变化会所有人都有反应（指竞争关系）
+  - `func(ctx context.Context)` 首先ctx 是副本，但是通道是指针：名相同，就是公用的，变化所有人都有反应（指竞争关系）
 ### 3.xxxx_test.go 
   - 整个文件是不能和此包一起被import的
   - go test -v xxxx_test.go 查看详情

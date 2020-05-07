@@ -3,16 +3,15 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"github.com/PlagueCat-Miao/TheGoApiLerarnNote/GINtest"
-
+	"github.com/gin-gonic/gin"
+	"log"
 	"net/http"
-
+	"os"
+	"os/signal"
+	"time"
 )
 
-type  Name struct {
-	name string
-}
 
 func init() {
 	fmt.Println("gin与协程，，请手动退出")
@@ -33,38 +32,36 @@ func main() {
 	})
 	router.POST("/do/test1", GINtest.Handle1)
 
+	server := &http.Server{
+		Addr:              ":8080",
+		Handler:           router,
+	}
+	go func() {
+		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed{
+			log.Fatalf("Listen:%s\n",err)
+		}
+	}()
+	// 等待中断信号以优雅地关闭服务器（设置 10 秒的超时时间）
+	fmt.Println("等待ctrl+c 启动Shutdown-Server")
+	quit := make(chan os.Signal)
+	signal.Notify(quit, os.Interrupt)
+	<-quit
+	log.Println("Shutdown Server ...")
 
-
-
-	ctx, cancel := context.WithCancel(context.Background())
+	//得到在当前上下文，并设定的了死亡时间
+	ctx,cancel := context.WithTimeout(context.Background(),10*time.Second)
 	defer cancel()
 
-	go func(ctx context.Context){
+	//首先停止接受所有新请求，并一个个处理旧请求，
+	// 获取上下文，以获取死亡时间
+	// 于min( 上下文的死亡时间，全部请求处理结束) 时间 停止堵塞。
+	if err := server.Shutdown(ctx);err!= nil {
+		log.Fatal("server shutdown: ",err)
+	}
 
-
-	}(ctx)
-
-	var n  Name;
-	n1 := new(Name)
-	var n2,n3 *Name
-	n2=&n;
-	n3=n1;
-    n2.name="hell"
-    n3.name="cat"
-
-	fmt.Println("n",n,"n1:",n1)
-	var fn,fn2  Name;
-	input(fn)
-	inputP(&fn2)
-	fmt.Println("n",fn.name,"n1:",fn2.name)
+	log.Println("server exiting...")
 
 	//router.Run(":8080")
 
 
-}
-func input(a Name){
-	a.name= "k"
-}
-func inputP(a* Name){
-	a.name= "kP"
 }
