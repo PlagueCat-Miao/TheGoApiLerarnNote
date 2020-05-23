@@ -32,6 +32,8 @@ func main() {
 	})
 	router.POST("/do/test1", GINtest.Handle1)
 
+	router.GET("/do/get")
+
 	server := &http.Server{
 		Addr:              ":8080",
 		Handler:           router,

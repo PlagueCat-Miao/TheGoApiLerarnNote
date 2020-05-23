@@ -48,7 +48,8 @@
  - 同文件其他函数不能直接访问/赋值
  - 同文件其他函数使用地址符&获取数组名后，仍不能访问/赋值！！如：
   `var json4 Login; err := c.ShouldBindJSON(&json4);` 时，json4中的小写变量将不会被覆盖，且程序不会报错；
-  
+#### go-http
+-[Go net/http 发送常见的 http 请求](https://www.cnblogs.com/kaichenkai/p/11365020.html)  
 
 ### postman
 #### 如何卸载
